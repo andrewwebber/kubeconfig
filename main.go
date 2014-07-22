@@ -4,16 +4,22 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
 	"gopkg.in/yaml.v1"
 )
 
-var configFile string
+var (
+	configFile string
+	iso        bool
+)
 
 type Config struct {
 	DNS      string `yaml:"dns"`
@@ -25,9 +31,9 @@ type Config struct {
 	Token    string `yaml:"token"`
 }
 
-
 func init() {
 	flag.StringVar(&configFile, "c", "kubernetes.yml", "config file to use")
+	flag.BoolVar(&iso, "iso", false, "generate config-drive iso images")
 }
 
 func main() {
@@ -68,11 +74,30 @@ func main() {
 }
 
 func render(data map[string]string) {
+	var buf bytes.Buffer
 	f, err := os.Create(data["hostname"] + ".yml")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	if err := nodeTmpl.Execute(f, data); err != nil {
+	w := io.MultiWriter(f, &buf)
+	if err := nodeTmpl.Execute(w, data); err != nil {
 		log.Fatal(err.Error())
+	}
+	if iso {
+		isoName := data["hostname"] + ".iso"
+		resp, err := http.Post("http://107.178.217.37:6500/genisoimage", "application/yaml", &buf)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			log.Fatal("non 200 exit code")
+		}
+		f, err := os.Create(isoName)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer f.Close()
+		io.Copy(f, resp.Body)
 	}
 }
