@@ -48,4 +48,4 @@ kubeconfig -c config.yml -iso
 
 ```
 master.iso  master.yml  node1.iso   node1.yml   node2.iso   node2.yml
-``
+```
