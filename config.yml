@@ -1,6 +1,6 @@
-token: 35888e98a8a633296d3b53b2bf9a87fc
-dns: 192.168.12.1
-gateway: 192.168.12.1
+token: c9c6c9d9de90c3e6b229c552bf5f3d2f
+dns: 192.168.12.2
+gateway: 192.168.12.2
 master_ip: 192.168.12.10
 node1_ip: 192.168.12.11
 node2_ip: 192.168.12.12
