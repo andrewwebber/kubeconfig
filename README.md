@@ -16,7 +16,6 @@ Usage of ./kubeconfig:
 
 config.yml
 ```
-token: 35888e98a8a633296d3b53b2bf9a87fc
 dns: 192.168.12.1
 gateway: 192.168.12.1
 master_ip: 192.168.12.10
