@@ -51,7 +51,6 @@ func main() {
 	data["gateway"] = c.Gateway
 	data["sshkey"] = c.SSHKey
 	data["machines"] = fmt.Sprintf("%s,%s,%s", c.MasterIP, c.Node1IP, c.Node2IP)
-	data["peers"] = fmt.Sprintf("%s:7001,%s:7001,%s:7001", c.MasterIP, c.Node1IP, c.Node2IP)
 
 	// Generate master.yml
 	data["subnet"] = "10.244.0.1/24"
@@ -63,12 +62,14 @@ func main() {
 	data["subnet"] = "10.244.1.1/24"
 	data["hostname"] = "node1"
 	data["ip"] = c.Node1IP
+	data["peers"] = fmt.Sprintf("%s:7001,%s:7001", c.MasterIP, c.Node2IP)
 	render(data)
 
 	// Generate node2.yml
 	data["subnet"] = "10.244.2.1/24"
 	data["hostname"] = "node2"
 	data["ip"] = c.Node2IP
+	data["peers"] = fmt.Sprintf("%s:7001,%s:7001", c.MasterIP, c.Node1IP)
 	render(data)
 }
 

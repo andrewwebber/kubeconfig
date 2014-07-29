@@ -12,7 +12,9 @@ coreos:
     addr: {{.ip}}:4001
     bind-addr: 0.0.0.0
     peer-addr: {{.ip}}:7001
+{{if ne .hostname "master"}}
     peers: {{.peers}}
+{{end}}
     name: {{.hostname}}
     peer-heartbeat-interval: 250
     peer-election-timeout: 1000
@@ -129,8 +131,8 @@ coreos:
         --etcd_servers=http://127.0.0.1:4001 \
         --machines={{.machines}} \
         --logtostderr=true
-        Restart=on-failure
-        RestartSec=1
+        Restart=always
+        RestartSec=2
 
         [Install]
         WantedBy=multi-user.target
@@ -147,8 +149,8 @@ coreos:
         --etcd_servers=http://127.0.0.1:4001 \
         --master=127.0.0.1:8080 \
         --logtostderr=true
-        Restart=on-failure
-        RestartSec=1
+        Restart=always
+        RestartSec=2
 
         [Install]
         WantedBy=multi-user.target
@@ -168,8 +170,8 @@ coreos:
         --hostname_override={{.ip}} \
         --etcd_servers=http://127.0.0.1:4001 \
         --logtostderr=true
-        Restart=on-failure
-        RestartSec=1
+        Restart=always
+        RestartSec=2
 
         [Install]
         WantedBy=multi-user.target
@@ -183,13 +185,13 @@ coreos:
 
         [Service]
         ExecStart=/opt/bin/proxy --etcd_servers=http://127.0.0.1:4001 --logtostderr=true
-        Restart=on-failure
-        RestartSec=1
+        Restart=always
+        RestartSec=2
 
         [Install]
         WantedBy=multi-user.target
   update:
     group: alpha
-    reboot-strategy: etcd-lock
+    reboot-strategy: off
 ssh_authorized_keys:
     - {{.sshkey}}`))
