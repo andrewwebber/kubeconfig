@@ -11,8 +11,11 @@ coreos:
   etcd:
     addr: {{.ip}}:4001
     bind-addr: 0.0.0.0
-    discovery: https://discovery.etcd.io/{{.token}}
     peer-addr: {{.ip}}:7001
+    peers: {{.peers}}
+    name: {{.hostname}}
+    peer-heartbeat-interval: 250
+    peer-election-timeout: 1000
   units:
     - name: static.network
       command: start

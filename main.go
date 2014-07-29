@@ -28,7 +28,6 @@ type Config struct {
 	Node1IP  string `yaml:"node1_ip"`
 	Node2IP  string `yaml:"node2_ip"`
 	SSHKey   string `yaml:"sshkey"`
-	Token    string `yaml:"token"`
 }
 
 func init() {
@@ -50,9 +49,9 @@ func main() {
 	data := make(map[string]string)
 	data["dns"] = c.DNS
 	data["gateway"] = c.Gateway
-	data["token"] = c.Token
 	data["sshkey"] = c.SSHKey
 	data["machines"] = fmt.Sprintf("%s,%s,%s", c.MasterIP, c.Node1IP, c.Node2IP)
+	data["peers"] = fmt.Sprintf("%s:7001,%s:7001,%s:7001", c.MasterIP, c.Node1IP, c.Node2IP)
 
 	// Generate master.yml
 	data["subnet"] = "10.244.0.1/24"
