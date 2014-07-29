@@ -9,13 +9,13 @@ var nodeTmpl = template.Must(template.New("node").Parse(`#cloud-config
 hostname: {{.hostname}}
 coreos:
   etcd:
+    name: {{.hostname}}
     addr: {{.ip}}:4001
     bind-addr: 0.0.0.0
     peer-addr: {{.ip}}:7001
 {{if ne .hostname "master"}}
     peers: {{.peers}}
 {{end}}
-    name: {{.hostname}}
     peer-heartbeat-interval: 250
     peer-election-timeout: 1000
   units:
