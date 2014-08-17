@@ -19,6 +19,7 @@ import (
 var (
 	configFile string
 	iso        bool
+	isoGenHost string
 )
 
 type Config struct {
@@ -33,6 +34,7 @@ type Config struct {
 func init() {
 	flag.StringVar(&configFile, "c", "kubernetes.yml", "config file to use")
 	flag.BoolVar(&iso, "iso", false, "generate config-drive iso images")
+	flag.StringVar(&isoGenHost, "isogenhost", "", "Host address for the iso generator")
 }
 
 func main() {
@@ -85,7 +87,12 @@ func render(data map[string]string) {
 	}
 	if iso {
 		isoName := data["hostname"] + ".iso"
-		resp, err := http.Post("http://107.178.217.37:6500/genisoimage", "application/yaml", &buf)
+		url := "http://107.178.217.37:6500/genisoimage"
+		if len(isoGenHost) > 0 {
+			url = fmt.Sprintf("http://%s:6500/genisoimage", isoGenHost)
+		}
+
+		resp, err := http.Post(url, "application/yaml", &buf)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
